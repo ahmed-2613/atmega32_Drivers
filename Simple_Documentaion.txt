@@ -1,0 +1,19 @@
+Std_Types.h:
+- Type-define each premetive type with standard name.
+	- unsigned & signed - char - short int 
+	- long int - long long int - float
+	- double - long double
+- Macro-define maximum and minimum values of each premetive type.
+_____________________________________________________________________
+Bit_Manipulation.h
+- Bitwise Operations
+- Half-Byte Operations
+- Full Size Operations
+_____________________________________________________________________
+Atmega32.h:
+- logical states
+- Groups-Ports
+- Pins
+- Hexa-Compound Structure
+- Port-Pin Compound
+_____________________________________________________________________
