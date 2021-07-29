@@ -38,7 +38,7 @@ ________________________________________________________________________________
 
 Direction/State Set Functions:-
 
-- void Dio_Set_Pin(uint8_t pin, uint8_t state);
+- void Dio_Set_Pin(uint8_t Pin, uint8_t State);
 	Set Direction of one channel either as Digital I/O.
 	
 	Parameters:
@@ -49,7 +49,7 @@ Direction/State Set Functions:-
 		void: this functions doesn't need to return anything.
 	________________________________________________________________________________	
 
-- void Dio_Set_Port(uint8_t Group, uint8_t state);
+- void Dio_Set_Port(uint8_t Group, uint8_t State);
 	Set the same Direction for a whole Port either as Digital I/O.
 	
 	Parameters:
@@ -60,7 +60,7 @@ Direction/State Set Functions:-
 		void: this functions doesn't need to return anything.
 	________________________________________________________________________________
 	
-- void Dio_Set_Upper(uint8_t Group, uint8_t state);
+- void Dio_Set_Upper(uint8_t Group, uint8_t State);
 	Set the same Direction for a upper half of a Port either as Digital I/O.
 	
 	Parameters:
@@ -71,7 +71,7 @@ Direction/State Set Functions:-
 		void: this functions doesn't need to return anything.
 	________________________________________________________________________________
 	
-- void Dio_Set_Lower(uint8_t Group, uint8_t state);
+- void Dio_Set_Lower(uint8_t Group, uint8_t State);
 	Set the same Direction for a lower half of a Port either as Digital I/O.
 	
 	Parameters:
@@ -85,7 +85,7 @@ ________________________________________________________________________________
 
 Direction/State get Functions:-
 
-- uint8_t Get_Pin_Status(uint8_t pin);
+- uint8_t Get_Pin_Status(uint8_t Pin);
 	Get Direction of a pin.
 	
 	Parameters:
@@ -98,7 +98,7 @@ ________________________________________________________________________________
 
 O/P Write Functions:-
 
-- void Dio_Pin_Write(uint8_t pin, uint8_t value);
+- void Dio_Pin_Write(uint8_t Pin, uint8_t Value);
 	Write logical states to a given pin.
 	
 	Parameters:
@@ -109,7 +109,7 @@ O/P Write Functions:-
 		void: this functions doesn't need to return anything.
 	________________________________________________________________________________
 
-- void Dio_Pin_Toggle(uint8_t pin);
+- void Dio_Pin_Toggle(uint8_t Pin);
 	Toggle logical O/P value of a given pin.
 	
 	Parameters:
@@ -119,7 +119,7 @@ O/P Write Functions:-
 		void: this functions doesn't need to return anything.
 	________________________________________________________________________________
 
-- void Dio_Port_Write(uint8_t Group, uint8_t value);
+- void Dio_Port_Write(uint8_t Group, uint8_t Value);
 	Write one-byte-size number to a given port.
 	
 	Parameters:
@@ -130,7 +130,7 @@ O/P Write Functions:-
 		void: this functions doesn't need to return anything.
 	________________________________________________________________________________
 
-- void Dio_Upper_Write(uint8_t Group, uint8_t value);
+- void Dio_Upper_Write(uint8_t Group, uint8_t Value);
 	Write 4-bit-size number to an upper half of a given port. 
 	
 	Parameters:
@@ -141,7 +141,7 @@ O/P Write Functions:-
 		void: this functions doesn't need to return anything.
 	________________________________________________________________________________
 
-- void Dio_Lower_Write(uint8_t Group, uint8_t value);
+- void Dio_Lower_Write(uint8_t Group, uint8_t Value);
 	Write 4-bit-size number to an lower half of a given port.
 	
 	Parameters:
@@ -155,7 +155,7 @@ ________________________________________________________________________________
 
 O/P Get Functions:-
 
-- uint8_t Get_Pin_Value(uint8_t pin);
+- uint8_t Get_Pin_Value(uint8_t Pin);
 	Get logical driven O/P value of a given pin.
 	
 	Parameters:
@@ -169,7 +169,7 @@ O/P Get Functions:-
 	Get one-byte-size value to a given port.
 	
 	Parameters:
-		 uint8_t pin: Port number.
+		 uint8_t Group: Port number.
 		
 	Return type:
 		uint8_t: one-byte-size number.
@@ -179,7 +179,7 @@ O/P Get Functions:-
 	Get 4-bit-size value of an upper half of a given port.
 	
 	Parameters:
-		 uint8_t pin: Port number.
+		 uint8_t Group: Port number.
 		
 	Return type:
 		uint8_t: 4-bit-size number.
@@ -189,7 +189,7 @@ O/P Get Functions:-
 	Get 4-bit-size value of an lower half of a given port.
 	
 	Parameters:
-		 uint8_t pin: Port number.
+		 uint8_t Group: Port number.
 		
 	Return type:
 		uint8_t: 4-bit-size number.
@@ -198,20 +198,75 @@ ________________________________________________________________________________
 
 O/P Read Functions:-
 
-- uint8_t Dio_Pin_Read(uint8_t pin);
+- uint8_t Dio_Pin_Read(uint8_t Pin);
 	Read input value from a given pin.
+	
+	Parameters:
+		 uint8_t pin: "Port-Pin Compound" of Port number and Pin number..
+		
+	Return type:
+		uint8_t: Logical value(0, 1).
 	________________________________________________________________________________
 
-- uint8_t Dio_Port_Read(uint8_t Group);
+- uint16_t Dio_Port_Read(uint8_t Group);
 	Read input value of an entire given port at once.
+	
+	Parameters:
+		 uint8_t Group: Port number.
+		
+	Return type:
+		uint16_t: 8-bit-size value OR 12-bit-size value.
 	________________________________________________________________________________
 	
 - uint8_t Dio_Upper_Read(uint8_t Group);
 	Read input value of an upper half of a given port. 
+	
+	Parameters:
+		 uint8_t Group: Port number.
+		
+	Return type:
+		uint8_t: 4-bit-size number.
 	________________________________________________________________________________
 - uint8_t Dio_Lower_Read(uint8_t Group);
 	Read input value of an lower half of a given port.
+	
+	Parameters:
+		 uint8_t Group: Port number.
+		
+	Return type:
+		uint8_t: 4-bit-size number.
 	________________________________________________________________________________
 ________________________________________________________________________________________________________
 
+Pullup Resistor Configuration:-
 
+- void Dio_Pullup_Set(uint8_t Pin);
+	Configure given Pin with Pullup Resistor.
+	
+	Parameters:
+		 uint8_t pin: "Port-Pin Compound" of Port number and Pin number..
+		
+	Return type:
+		void: this function doesn't need to return anything.
+	________________________________________________________________________________
+		
+- void Dio_Pullup_Reset(uint8_t Pin);
+	Deconfigure given Pin with Pullup Resistor.
+	
+	Parameters:
+		 uint8_t pin: "Port-Pin Compound" of Port number and Pin number..
+		
+	Return type:
+		void: this function doesn't need to return anything.
+	________________________________________________________________________________
+	
+- void Global_Pullup_Configure(uint8_t State);
+	Enable/Disable All Pullup Functionality
+	
+	Parameters:
+		 uint8_t State: Logical State either High or Low
+		
+	Return type:
+		void: this function doesn't need to return anything.
+	________________________________________________________________________________
+________________________________________________________________________________________________________

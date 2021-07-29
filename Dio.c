@@ -3,8 +3,24 @@
 #define Register
 #include "Atmega32.h"
 
+
 /*------------------------------------------------------------------*/
 /*---------------------------Output---------------------------------*/
+
+//PORT Register Modify
+void PORT_Modify(uint8_t Pin, uint8_t State)
+{
+	uint8_t Group = get_upper(Pin);
+	reset_upper(Pin);
+
+	switch(Group)
+	{
+	case GroupA: State ? set_bit(PORTA, Pin) : reset_bit(PORTA, Pin); break;
+	case GroupB: State ? set_bit(PORTB, Pin) : reset_bit(PORTB, Pin); break;
+	case GroupC: State ? set_bit(PORTC, Pin) : reset_bit(PORTC, Pin); break;
+	case GroupD: State ? set_bit(PORTD, Pin) : reset_bit(PORTD, Pin); break;
+	}
+}
 
 //Write to a single pin
 void Dio_Pin_Write(uint8_t Pin, uint8_t Value)
@@ -159,13 +175,18 @@ uint8_t Get_Lower_Value(uint8_t Group)
 //Set Direction of a single pin
 void Dio_Set_Pin(uint8_t Pin, uint8_t State)
 {
+	if(State == Input_Pullup) {
+		PORT_Modify(Pin, High);
+		State = Input;
+	}
+
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
 
 	//Input error check
 	if(Pin > Pin7)
 		return;
-	if(State > 1)
+	if(State > 2)
 		return;
 
 	switch(Group)
@@ -183,8 +204,13 @@ void Dio_Set_Pin(uint8_t Pin, uint8_t State)
 void Dio_Set_Port(uint8_t Group, uint8_t State)
 {
 	//Input error check
-	if(State > 1)
+	if(State > 2)
 		return;
+
+	if(State == Input_Pullup) {
+		Dio_Port_Write(Group , High);
+		State = Input;
+	}
 
 	switch(Group)
 	{
@@ -201,8 +227,13 @@ void Dio_Set_Port(uint8_t Group, uint8_t State)
 void Dio_Set_Upper(uint8_t Group, uint8_t State)
 {
 	//Input error check
-	if(State > 1)
+	if(State > 2)
 		return;
+
+	if(State == Input_Pullup) {
+		Dio_Upper_Write(Group , High);
+		State = Input;
+	}
 
 	switch(Group)
 	{
@@ -217,8 +248,13 @@ void Dio_Set_Upper(uint8_t Group, uint8_t State)
 void Dio_Set_Lower(uint8_t Group, uint8_t State)
 {
 	//Input error check
-	if(State > 1)
+	if(State > 2)
 		return;
+
+	if(State == Input_Pullup) {
+		Dio_Lower_Write(Group , High);
+		State = Input;
+	}
 
 	switch(Group)
 	{
@@ -304,3 +340,42 @@ uint8_t Dio_Lower_Read(uint8_t Group)
 
 	return 0xFF;	//Group error
 }
+
+
+/*------------------------------------------------------------------*/
+/*-------------------Pull_Up Configuration--------------------------*/
+
+//Configure/De-Configure Input Channels with Pull-Up Configuration
+void Dio_Pullup_Configure(uint8_t Pin, uint8_t State)
+{
+	//Input error check
+	if(get_lower(Pin) > Pin7)
+		return;
+
+	if(Get_Pin_Direction(Pin) != Input)
+		return;
+
+	PORT_Modify(Pin, State);
+
+	return;
+}
+
+#define PUD 2
+//Configure/De-Configure All Channels with Pull-Up Configuration
+//This overrides the configuration of single pins
+void Global_Pullup_Configure(uint8_t State)
+{
+	//Input error check
+	if(State > High)
+		return;
+
+	State ? set_bit(SFIOR, PUD) : reset_bit(SFIOR, PUD);
+}
+
+//Get state(Enable/Disable) of the global pullup configuration
+uint8_t Global_Pullup_Get()
+{
+	return get_bit(SFIOR, PUD);
+}
+
+/*------------------------------------------------------------------*/

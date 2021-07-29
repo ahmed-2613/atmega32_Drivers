@@ -17,7 +17,7 @@ void Dio_Set_Upper(uint8_t Group, uint8_t State);
 void Dio_Set_Lower(uint8_t Group, uint8_t State);
 
 //Get the direction of a given Pin
-uint8_t Get_Pin_Status(uint8_t Pin);
+uint8_t Get_Pin_Direction(uint8_t Pin);
 
 
 /*------------------------------------------------------------------*/
@@ -61,5 +61,17 @@ uint16_t Dio_Port_Read(uint8_t Group);
 uint8_t Dio_Upper_Read(uint8_t Group);
 uint8_t Dio_Lower_Read(uint8_t Group);
 
+/*------------------------------------------------------------------*/
+/*-------------------Pull_Up Configuration--------------------------*/
+
+//Configure/De-Configure Input Channels with Pull-Up Configuration
+void Dio_Pullup_Configure(uint8_t Pin, uint8_t State);
+
+//Configure/De-Configure All Channels with Pull-Up Configuration
+//This overrides the configuration of single pins
+void Global_Pullup_Configure(uint8_t State);
+
+//Get state(Enable/Disable) of the global pullup configuration
+uint8_t Global_Pullup_Get();
 
 #endif /* ATMEGA32_DIO_H */

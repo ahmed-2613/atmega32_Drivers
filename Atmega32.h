@@ -2,6 +2,8 @@
 #define ATMEGA32
 
 #ifdef Register
+	#define SFIOR	 *((volatile uint8_t*) 0x50)
+
 	#define PORTA	 *((volatile uint8_t*) 0x3B)
 	#define DDRA	 *((volatile uint8_t*) 0x3A)
 	#define PINA	 *((volatile uint8_t*) 0x39)
@@ -18,18 +20,22 @@
 	#define DDRD	 *((volatile uint8_t*) 0x31)
 	#define PIND	 *((volatile uint8_t*) 0x30)
 
-	#define SFIOR	 *((volatile uint8_t*) 0x50)
 #endif //Register
 
 //Digital States
 #define Input 0
 #define Output 1
+#define Input_Pullup 2
 
 //Logical States
+#define low  0
 #define Logic_Low  0
-#define Low  0
+
 #define Logic_High 1
 #define High 1
+
+#define Enable 	1
+#define Disable 0
 
 //Groups
 #define GroupA 0
