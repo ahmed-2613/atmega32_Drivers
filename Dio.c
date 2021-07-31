@@ -1,73 +1,51 @@
+#define Register
 #include "Std_Types.h"
 #include "Algobit.h"
-#define Register
+
+
 #include "Atmega32.h"
 
+/*------------------------------------------------------------------*/
+/*---------------------------Direction Get---------------------------------*/
+//Get the direction of a given Pin
+uint8_t Get_Pin_Direction(uint8_t Pin)
+{
+	uint8_t Group = get_upper(Pin);
+	reset_upper(Pin);
 
+	//Input error check
+	if(Pin > Pin7)
+		return 0xFF;	//Pin error
+
+
+	switch (Group)
+	{
+	case GroupA: return get_bit(DDRA, Pin);
+	case GroupB: return get_bit(DDRB, Pin);
+	case GroupC: return get_bit(DDRC, Pin);
+	case GroupD: return get_bit(DDRD, Pin);
+	}
+
+	return 0xFF;	//Group error
+}
+
+uint8_t Get_Port_Direction(uint8_t Group)
+{
+	switch (Group)
+	{
+	case GroupA: return DDRA;
+	case GroupB: return DDRB;
+	case GroupC: return DDRC;
+	case GroupD: return DDRD;
+	}
+
+	return 0xFF;	//Group error
+}
 /*------------------------------------------------------------------*/
 /*---------------------------Output---------------------------------*/
 
 //PORT Register Modify
-void PORT_Modify(uint8_t Pin, uint8_t State)
-{
-	uint8_t Group = get_upper(Pin);
-	reset_upper(Pin);
-
-	switch(Group)
-	{
-	case GroupA: State ? set_bit(PORTA, Pin) : reset_bit(PORTA, Pin); break;
-	case GroupB: State ? set_bit(PORTB, Pin) : reset_bit(PORTB, Pin); break;
-	case GroupC: State ? set_bit(PORTC, Pin) : reset_bit(PORTC, Pin); break;
-	case GroupD: State ? set_bit(PORTD, Pin) : reset_bit(PORTD, Pin); break;
-	}
-}
-
-//Write to a single pin
-void Dio_Pin_Write(uint8_t Pin, uint8_t Value)
-{
-	uint8_t Group = get_upper(Pin);
-	reset_upper(Pin);
-
-	//Input error check
-	if(Pin > Pin7)
-		return;
-	if(Value > 1)
-		return;
-
-	switch(Group)
-	{
-	case GroupA: Value ? set_bit(PORTA, Pin) : reset_bit(PORTA, Pin); break;
-	case GroupB: Value ? set_bit(PORTB, Pin) : reset_bit(PORTB, Pin); break;
-	case GroupC: Value ? set_bit(PORTC, Pin) : reset_bit(PORTC, Pin); break;
-	case GroupD: Value ? set_bit(PORTD, Pin) : reset_bit(PORTD, Pin); break;
-	}
-
-	return;
-}
-
-//Toggle O/P value of a given pin
-void Dio_Pin_Toggle(uint8_t Pin)
-{
-	uint8_t Group = get_upper(Pin);
-	reset_upper(Pin);
-
-	//Input error check
-	if(Pin > Pin7)
-		return;
-
-	switch(Group)
-	{
-	case GroupA: toggle_bit(PORTA, Pin); break;
-	case GroupB: toggle_bit(PORTB, Pin); break;
-	case GroupC: toggle_bit(PORTC, Pin); break;
-	case GroupD: toggle_bit(PORTD, Pin); break;
-	}
-
-	return;
-}
-
-//Write to a whole Port
-void Dio_Port_Write(uint8_t Group, uint8_t Value)
+void Port_Modify(uint8_t Group, uint8_t Value)
 {
 	switch(Group)
 	{
@@ -77,33 +55,115 @@ void Dio_Port_Write(uint8_t Group, uint8_t Value)
 	case GroupD: PORTD = Value; break;
 	}
 
-	return;
+}
+
+//Write to a single pin
+uint8_t Dio_Pin_Write(uint8_t Pin, uint8_t Value)
+{
+	if(Get_Pin_Direction(Pin) != Output)
+			return 0xFF;	//error writing on Input Channel
+
+	uint8_t Group = get_upper(Pin);
+	reset_upper(Pin);
+
+	//Input error check
+	if(Pin > Pin7)
+		return 0xFF;	//Pin error
+	if(Value > 1)
+		return 0xFF;	//Logical value error
+
+	switch(Group)
+	{
+	case GroupA: Value ? set_bit(PORTA, Pin) : reset_bit(PORTA, Pin); break;
+	case GroupB: Value ? set_bit(PORTB, Pin) : reset_bit(PORTB, Pin); break;
+	case GroupC: Value ? set_bit(PORTC, Pin) : reset_bit(PORTC, Pin); break;
+	case GroupD: Value ? set_bit(PORTD, Pin) : reset_bit(PORTD, Pin); break;
+	default:
+		return 0xFF;	//Group error
+	}
+
+	return 0x00;	//No error
+}
+
+//Toggle O/P value of a given pin
+uint8_t Dio_Pin_Toggle(uint8_t Pin)
+{
+	if(Get_Pin_Direction(Pin) != Output)
+		return 0xFF;	//error writing on Input Channel
+
+	uint8_t Group = get_upper(Pin);
+	reset_upper(Pin);
+
+	//Input error check
+	if(Pin > Pin7)
+		return 0xFF;	//Pin error
+
+	switch(Group)
+	{
+	case GroupA: toggle_bit(PORTA, Pin); break;
+	case GroupB: toggle_bit(PORTB, Pin); break;
+	case GroupC: toggle_bit(PORTC, Pin); break;
+	case GroupD: toggle_bit(PORTD, Pin); break;
+	default:
+		return 0xFF;	//Group error
+	}
+
+	return 0x00; 	//No error
+}
+
+//Write to a whole Port
+uint8_t Dio_Port_Write(uint8_t Group, uint8_t Value)
+{
+	if(Get_Port_Direction(Group) != 0xFF)
+		return 0xFF;	//error writing on Non-Output Port
+
+	switch(Group)
+	{
+	case GroupA: PORTA = Value; break;
+	case GroupB: PORTB = Value; break;
+	case GroupC: PORTC = Value; break;
+	case GroupD: PORTD = Value; break;
+	default:
+		return 0xFF;	//Group error
+	}
+
+	return 0x00; //No error
 }
 
 //Write to half a Port
-void Dio_Upper_Write(uint8_t Group, uint8_t Value)
+uint8_t Dio_Upper_Write(uint8_t Group, uint8_t Value)
 {
+	if(get_upper(Get_Port_Direction(Group)) != 0x0F)
+		return 0xFF;	//error writing on Non-Output Port
+
 	switch(Group)
 	{
 	case GroupA: insert_upper(PORTA, Value); break;
 	case GroupB: insert_upper(PORTB, Value); break;
 	case GroupC: insert_upper(PORTC, Value); break;
 	case GroupD: insert_upper(PORTD, Value); break;
+	default:
+		return 0xFF;	//Group error
 	}
 
-	return;
+	return 0x00; //No error
 }
-void Dio_Lower_Write(uint8_t Group, uint8_t Value)
+uint8_t Dio_Lower_Write(uint8_t Group, uint8_t Value)
 {
+	if(get_lower(Get_Port_Direction(Group)) != 0x0F)
+		return 0xFF;	//error writing on Non-Output Port
+
 	switch(Group)
 	{
 	case GroupA: insert_lower(PORTA, Value); break;
 	case GroupB: insert_lower(PORTB, Value); break;
 	case GroupC: insert_lower(PORTC, Value); break;
 	case GroupD: insert_lower(PORTD, Value); break;
+	default:
+		return 0xFF;	//Group error
 	}
 
-	return;
+	return 0x00; //No error
 }
 
 
@@ -115,7 +175,7 @@ uint8_t Get_Pin_Value(uint8_t Pin)
 
 	//Input error check
 	if(Pin > Pin7)
-		return 0xFF;
+		return 0xFF;	//Pin error
 
 	switch(Group)
 	{
@@ -125,7 +185,7 @@ uint8_t Get_Pin_Value(uint8_t Pin)
 	case GroupD: return get_bit(PORTD, Pin);
 	}
 
-	return 0xFF;
+	return 0xFF;	//Group error
 }
 
 //Get driven O/P value of a port
@@ -139,7 +199,7 @@ uint16_t Get_Port_Value(uint8_t Group)
 	case GroupD: return PORTD;
 	}
 
-	return 0xFFF;
+	return 0xFFF;	//Group error
 }
 
 //Get driven O/P value of half a port
@@ -153,7 +213,7 @@ uint8_t Get_Upper_Value(uint8_t Group)
 	case GroupD: return get_upper(PORTD);
 	}
 
-	return 0xFF;
+	return 0xFF;	//Group error
 }
 uint8_t Get_Lower_Value(uint8_t Group)
 {
@@ -165,29 +225,35 @@ uint8_t Get_Lower_Value(uint8_t Group)
 	case GroupD: return get_lower(PORTD);
 	}
 
-	return 0xFF;
+	return 0xFF;	//Group error
 }
 
 
 /*------------------------------------------------------------------*/
-/*-----------------------Direction set-----------------------------*/
+/*-----------------------Direction Set-----------------------------*/
 
 //Set Direction of a single pin
-void Dio_Set_Pin(uint8_t Pin, uint8_t State)
+uint8_t Dio_Set_Pin(uint8_t Pin, uint8_t State)
 {
-	if(State == Input_Pullup) {
-		PORT_Modify(Pin, High);
-		State = Input;
-	}
-
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
 
 	//Input error check
 	if(Pin > Pin7)
-		return;
-	if(State > 2)
-		return;
+		return 0xFF;	//Pin error
+
+	if(State == Input_Pullup)
+	{
+		if(Group > 3)
+			return 0xFF;	//Group error
+		else {
+			Port_Modify(Group, 1 << Pin);
+			State = Input;
+		}
+	}
+
+	if(State > 1)
+		return 0xFF;	//Direction error
 
 	switch(Group)
 	{
@@ -195,22 +261,29 @@ void Dio_Set_Pin(uint8_t Pin, uint8_t State)
 	case GroupB: State ? set_bit(DDRB, Pin) : reset_bit(DDRB, Pin); break;
 	case GroupC: State ? set_bit(DDRC, Pin) : reset_bit(DDRC, Pin); break;
 	case GroupD: State ? set_bit(DDRD, Pin) : reset_bit(DDRD, Pin); break;
+	default:
+		return 0xFF;	//Group error
 	}
 
-	return;
+	return 0x00;	//No error
 }
 
 //Set direction of a whole port
-void Dio_Set_Port(uint8_t Group, uint8_t State)
+uint8_t Dio_Set_Port(uint8_t Group, uint8_t State)
 {
-	//Input error check
-	if(State > 2)
-		return;
-
-	if(State == Input_Pullup) {
-		Dio_Port_Write(Group , High);
-		State = Input;
+	if(State == Input_Pullup)
+	{
+		if(Group > 3)
+			return 0xFF;	//Group error
+		else {
+			Port_Modify(Group, 0xFF);
+			State = Input;
+		}
 	}
+
+	//Input error check
+	if(State > 1)
+		return 0xFF;	//Direction error
 
 	switch(Group)
 	{
@@ -218,22 +291,29 @@ void Dio_Set_Port(uint8_t Group, uint8_t State)
 	case GroupB: State ? (DDRB = 0xFF) : (DDRB = 0x00); break;
 	case GroupC: State ? (DDRC = 0xFF) : (DDRC = 0x00); break;
 	case GroupD: State ? (DDRD = 0xFF) : (DDRD = 0x00); break;
+	default:
+		return 0xFF;	//Group error
 	}
 
-	return;
+	return 0x00;	//No error
 }
 
 //Set direction of a half a port
-void Dio_Set_Upper(uint8_t Group, uint8_t State)
+uint8_t Dio_Set_Upper(uint8_t Group, uint8_t State)
 {
-	//Input error check
-	if(State > 2)
-		return;
-
-	if(State == Input_Pullup) {
-		Dio_Upper_Write(Group , High);
-		State = Input;
+	if(State == Input_Pullup)
+	{
+		if(Group > 3)
+			return 0xFF;	//Group error
+		else {
+			Port_Modify(Group, 0xF0);
+			State = Input;
+		}
 	}
+
+	//Input error check
+	if(State > 1)
+		return 0xFF;		//Direction error
 
 	switch(Group)
 	{
@@ -241,20 +321,28 @@ void Dio_Set_Upper(uint8_t Group, uint8_t State)
 	case GroupB: State ? set_upper(DDRB) : reset_upper(DDRD); break;
 	case GroupC: State ? set_upper(DDRC) : reset_upper(DDRC); break;
 	case GroupD: State ? set_upper(DDRD) : reset_upper(DDRD); break;
+	default:
+		return 0xFF;		//Group error
+
 	}
 
-	return;
+	return 0x00;		//No error
 }
-void Dio_Set_Lower(uint8_t Group, uint8_t State)
+uint8_t Dio_Set_Lower(uint8_t Group, uint8_t State)
 {
-	//Input error check
-	if(State > 2)
-		return;
-
-	if(State == Input_Pullup) {
-		Dio_Lower_Write(Group , High);
-		State = Input;
+	if(State == Input_Pullup)
+	{
+		if(Group > 3)
+			return 0xFF;	//Group error
+		else {
+			Port_Modify(Group, 0x0F);
+			State = Input;
+		}
 	}
+
+	//Input error check
+	if(State > 1)
+		return 0xFF;		//Direction error
 
 	switch(Group)
 	{
@@ -262,17 +350,12 @@ void Dio_Set_Lower(uint8_t Group, uint8_t State)
 	case GroupB: State ? set_lower(DDRB) : reset_lower(DDRB); break;
 	case GroupC: State ? set_lower(DDRC) : reset_lower(DDRC); break;
 	case GroupD: State ? set_lower(DDRD) : reset_lower(DDRD); break;
+	default:
+		return 0xFF;		//Group error
+
 	}
 
-	return;
-}
-
-//Get the direction of a given Pin
-uint8_t Get_Pin_Status(uint8_t Pin)
-{
-	uint8_t Group = get_upper(Pin);
-	reset_upper(Pin);
-	return get_bit(Group, Pin);
+	return 0x00;		//No error
 }
 
 
@@ -282,12 +365,15 @@ uint8_t Get_Pin_Status(uint8_t Pin)
 //Read from a single pin
 uint8_t Dio_Pin_Read(uint8_t Pin)
 {
+	if(Get_Pin_Direction(Pin) == Output)
+		return 0xFF;	//error read from output channel
+
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
 
 	//Input error check
 	if(Pin > Pin7)
-		return 0xFF;	//0xFF is error indicator
+		return 0xFF;	//Pin error
 
 	switch(Group)
 	{
@@ -303,6 +389,9 @@ uint8_t Dio_Pin_Read(uint8_t Pin)
 //Read from a whole Port
 uint16_t Dio_Port_Read(uint8_t Group)
 {
+	if(Get_Port_Direction(Group) != 0x00)
+		return 0xFF;	//error reading from Non-Input Port
+
 	switch(Group)
 	{
 	case GroupA: return PINA;
@@ -318,6 +407,9 @@ uint16_t Dio_Port_Read(uint8_t Group)
 //Read from half a Port
 uint8_t Dio_Upper_Read(uint8_t Group)
 {
+	if(get_upper(Get_Port_Direction(Group)) != 0x0F)
+		return 0xFF;	//error reading from Non-Input Port
+
 	switch(Group)
 	{
 	case GroupA: return get_upper(PINA);
@@ -330,6 +422,9 @@ uint8_t Dio_Upper_Read(uint8_t Group)
 }
 uint8_t Dio_Lower_Read(uint8_t Group)
 {
+	if(get_lower(Get_Port_Direction(Group)) != 0x0F)
+		return 0xFF;	//error reading from Non-Input Port
+
 	switch(Group)
 	{
 	case GroupA: return get_lower(PINA);
@@ -346,34 +441,36 @@ uint8_t Dio_Lower_Read(uint8_t Group)
 /*-------------------Pull_Up Configuration--------------------------*/
 
 //Configure/De-Configure Input Channels with Pull-Up Configuration
-void Dio_Pullup_Configure(uint8_t Pin, uint8_t State)
+uint8_t Dio_Pullup_Configure(uint8_t Pin, uint8_t State)
 {
 	//Input error check
 	if(get_lower(Pin) > Pin7)
-		return;
+		return 0xFF;
 
 	if(Get_Pin_Direction(Pin) != Input)
-		return;
+		return 0xFF;
 
-	PORT_Modify(Pin, State);
+	Port_Modify(Pin, State);
 
-	return;
+	return 0x00;
 }
 
 #define PUD 2
 //Configure/De-Configure All Channels with Pull-Up Configuration
 //This overrides the configuration of single pins
-void Global_Pullup_Configure(uint8_t State)
+uint8_t Global_Pullup_Configure(uint8_t State)
 {
 	//Input error check
 	if(State > High)
-		return;
+		return 0xFF;	//error indicator
 
 	State ? set_bit(SFIOR, PUD) : reset_bit(SFIOR, PUD);
+
+	return 0x00;	//no-error indicator
 }
 
 //Get state(Enable/Disable) of the global pullup configuration
-uint8_t Global_Pullup_Get()
+uint8_t Get_Global_Pullup()
 {
 	return get_bit(SFIOR, PUD);
 }
