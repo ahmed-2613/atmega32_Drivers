@@ -8,18 +8,22 @@
 
 	#define SFIOR	 reg_addr_8(0x50)
 
+	//GroupA Registers
 	#define PORTA	 reg_addr_8(0x3B)
 	#define DDRA	 reg_addr_8(0x3A)
 	#define PINA	 reg_addr_8(0x39)
 
+	//GroupB Registers
 	#define PORTB	 reg_addr_8(0x38)
 	#define DDRB	 reg_addr_8(0x37)
 	#define PINB	 reg_addr_8(0x36)
 
+	//GroupC Registers
 	#define PORTC	 reg_addr_8(0x35)
 	#define DDRC	 reg_addr_8(0x34)
 	#define PINC	 reg_addr_8(0x33)
 
+	//GroupD Registers
 	#define PORTD	 reg_addr_8(0x32)
 	#define DDRD	 reg_addr_8(0x31)
 	#define PIND	 reg_addr_8(0x30)
