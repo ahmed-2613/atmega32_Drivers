@@ -1,0 +1,22 @@
+This file holds a simple but well-explained documentation of the Interrupt Handler Interface Driver.
+Interrupt Handler Driver consists of some macro-like functions and definitions that will be discussed in here.
+
+________________________________________________________________________________________________________
+
+Dependencies:
+- Std_Types.h
+- Algbit.h
+- Atmega32.h
+_________________________________________________________________________________________________________
+
+Driver Functionality:
+- Naming Vectors according to Datasheet
+- Default Vector
+- SEI/CLI Instructions
+- RETI Instruction
+- ISR Attributes
+- ISR with no attributes
+- ISR function with attributes
+(Interrupt Service Routine)
+_________________________________________________________________________________________________________
+
