@@ -6,27 +6,33 @@
 #define reg_addr_8(addr)	*((volatile uint8_t*) addr)
 #define reg_addr_16(addr)	*((volatile uint16_t*) addr)
 
-	#define SFIOR	 reg_addr_8(0x50)
+	#define SREG		reg_addr_8(0x5F)	//Status Register
+	#define GICR		reg_addr_8(0x5B)	//General Interrupt Control Register
+	#define GIFR		reg_addr_8(0x5A)	//General Interrupt Flag Register
+	#define MCUCR		reg_addr_8(0x55)	//MCU Control Register
+	#define MCUCSR		reg_addr_8(0x54)	//MCU Control Status Register
+
+	#define SFIOR		reg_addr_8(0x50)	//Special Function I/O Register
 
 	//GroupA Registers
-	#define PORTA	 reg_addr_8(0x3B)
-	#define DDRA	 reg_addr_8(0x3A)
-	#define PINA	 reg_addr_8(0x39)
+	#define PORTA	 	reg_addr_8(0x3B)
+	#define DDRA	 	reg_addr_8(0x3A)
+	#define PINA	 	reg_addr_8(0x39)
 
 	//GroupB Registers
-	#define PORTB	 reg_addr_8(0x38)
-	#define DDRB	 reg_addr_8(0x37)
-	#define PINB	 reg_addr_8(0x36)
+	#define PORTB	 	reg_addr_8(0x38)
+	#define DDRB	 	reg_addr_8(0x37)
+	#define PINB	 	reg_addr_8(0x36)
 
 	//GroupC Registers
-	#define PORTC	 reg_addr_8(0x35)
-	#define DDRC	 reg_addr_8(0x34)
-	#define PINC	 reg_addr_8(0x33)
+	#define PORTC	 	reg_addr_8(0x35)
+	#define DDRC	 	reg_addr_8(0x34)
+	#define PINC	 	reg_addr_8(0x33)
 
 	//GroupD Registers
-	#define PORTD	 reg_addr_8(0x32)
-	#define DDRD	 reg_addr_8(0x31)
-	#define PIND	 reg_addr_8(0x30)
+	#define PORTD	 	reg_addr_8(0x32)
+	#define DDRD	 	reg_addr_8(0x31)
+	#define PIND	 	reg_addr_8(0x30)
 
 #endif /* Register */
 
@@ -93,12 +99,22 @@
 //Logical States
 #define low  0
 #define Logic_Low  0
-
 #define Logic_High 1
 #define High 1
-
-#define Enable 	1
 #define Disable 0
+#define Enable 	1
+
+//Triggers
+#define Low_Level			0x0
+#define Logical_Change		0x1
+#define Falling_Edge		0x2
+#define Rising_Edge			0x3
+
+
+//External Interrupts
+#define INT0 0x6
+#define INT1 0x7
+#define INT2 0x5
 
 //Groups
 #define GroupA 0

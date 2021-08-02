@@ -1,0 +1,65 @@
+This file holds a simple but well-explained documentation of the Interrupt Handler Driver.
+Interrupt Handler Driver consists of some macro-like functions and definitions that will be discussed in here.
+
+________________________________________________________________________________________________________
+
+Dependencies:
+- Atmega32.h
+_________________________________________________________________________________________________________
+
+Driver Functionality:
+- Naming Vectors according to Datasheet
+- Default Vector
+- SEI/CLI/RETI Instructions
+- ISR Attributes
+- ISR(Interrupt Service Routine) Function
+_________________________________________________________________________________________________________
+
+Instructions:-
+	Instructions are a single asm line used to do something specific.
+
+- sei()
+	Enable Global interrupts.
+	It's the first line generated with ISR_NOBLOCK attribute.
+	
+- cli()
+	Disable Global interrupts.
+	it's the first line generated with ISR_BLOCK attribute.
+	
+- reti()
+	Return from ISR.
+	It's the last line generated with every attribute except ISR_NAKED attribute.
+	Must be added manually when using ISR_NAKED attribute.
+
+_________________________________________________________________________________________________________
+
+ISR Attributes:-
+	Characteristics used to alter the behaviour of ISR.
+	Used as an input parameter to ISR Function.
+
+- ISR_BLOCK
+	Initially enable Global interrupts by generating sei() Instruction at the beginning of ISR block.
+	It's the default attribute.
+
+- ISR_NOBLOCK
+	Initially disable Global interrupts by generating clii() Instruction at the beginning of ISR block.
+
+- ISR_NAKED
+	Allow the ISR block to be basic asm lines of code. Not Recommended to use extended asm or mixture with C code.
+	Compiler won't generate prologue/epilogue sequences.
+	User of this attribute is responsible of preservation of the machine state including the SREG register.
+	User is also responsible of adding reti() Instruction at the end of ISR block.
+
+- ISR_ALIASOF(vector)
+	Link ISR of this vector to the ISR of another vector.
+
+_________________________________________________________________________________________________________
+
+ISR(Vector, [Attributes]) :-
+	A Function used to handle generated interrupt events.
+	
+	Parameters:
+	- Vector:	Vector name whose event will be handled.
+	- [Attributes]: A list of attributes to alter ISR behaviour.
+	
+_________________________________________________________________________________________________________

@@ -1,65 +1,71 @@
-This file holds a simple but well-explained documentation of the Interrupt Handler Interface Driver.
-Interrupt Handler Driver consists of some macro-like functions and definitions that will be discussed in here.
+This file holds a simple but well-explained documentation of the Interrupt Interface Driver.
+Interrupt Interface Driver consists of functions and definitions that will be discussed in here.
+
+Interrupt Interface Driver is used to configure External Interrupts and Global Interrupts.
 
 ________________________________________________________________________________________________________
 
 Dependencies:
+- Std_Types.h
+- Interrupt_Handler.h
 - Atmega32.h
 _________________________________________________________________________________________________________
 
 Driver Functionality:
-- Naming Vectors according to Datasheet
-- Default Vector
-- SEI/CLI/RETI Instructions
-- ISR Attributes
-- ISR(Interrupt Service Routine) Function
+- Global Interrupt 		Enable/Disable
+- External Interrupts 	Enable/Disable
+- Interrupt Trigger Configure
+- Interrupt Flag Clear
 _________________________________________________________________________________________________________
 
-Instructions:-
-	Instructions are a single asm line used to do something specific.
+Global Interrupt:-
 
-- sei()
-	Enable Global interrupts.
-	It's the first line generated with ISR_NOBLOCK attribute.
-	
-- cli()
-	Disable Global interrupts.
-	it's the first line generated with ISR_BLOCK attribute.
-	
-- reti()
-	Return from ISR.
-	It's the last line generated with every attribute except ISR_NAKED attribute.
-	Must be added manually when using ISR_NAKED attribute.
-
-_________________________________________________________________________________________________________
-
-ISR Attributes:-
-	Characteristics used to alter the behaviour of ISR.
-	Used as an input parameter to ISR Function.
-
-- ISR_BLOCK
-	Initially enable Global interrupts by generating sei() Instruction at the beginning of ISR block.
-	It's the default attribute.
-
-- ISR_NOBLOCK
-	Initially disable Global interrupts by generating clii() Instruction at the beginning of ISR block.
-
-- ISR_NAKED
-	Allow the ISR block to be basic asm lines of code. Not Recommended to use extended asm or mixture with C code.
-	Compiler won't generate prologue/epilogue sequences.
-	User of this attribute is responsible of preservation of the machine state including the SREG register.
-	User is also responsible of adding reti() Instruction at the end of ISR block.
-
-- ISR_ALIASOF(vector)
-	Link ISR of this vector to the ISR of another vector.
-
-_________________________________________________________________________________________________________
-
-ISR(Vector, [Attributes]) :-
-	A Function used to handle generated interrupt events.
+- uint8_t Global_Interrupt_Configure(uint8_t State);
+	Enable/Disable Global Interrupts.
 	
 	Parameters:
-	- Vector:	Vector name whose event will be handled.
-	- [Attributes]: A list of attributes to alter ISR behaviour.
-	
+		- uint8_t State: either Enable(0) or Disable(1);
+		
+	Return:
+		- 0xFF: Input error
+		- 0x00: No error 
 _________________________________________________________________________________________________________
+
+External Interrupt:-
+
+- uint8_t External_Interrupt_Configure(uint8_t INT, uint8_t State);
+	Set/Reset an external interrupt
+	
+	Parameters:
+		- INT: 		Interrupt Number
+		- State: 	Enable/Disable 
+	
+	Return:
+		- 0xFF: Input error
+		- 0x00: No error
+	________________________________________________________________________________
+
+- uint8_t Interrupt_Trigger_Configure(uint8_t INT, uint8_t Trigger);
+	Configure what will trigger external interrupts
+	
+		Parameters:
+		- INT: 		Interrupt Number
+		- trigger:	Low_Level - Logical_Change - Falling_Edge - Rising_Edge
+		
+	Return:
+		- 0xFF: Input error
+		- 0x00: No error
+	________________________________________________________________________________
+
+- uint8_t Interrupt_Flag_Clear(uint8_t INT);
+	Clear external interrupt flag
+	
+	Parameters:
+		- INT: Interrupt Number
+		
+	Return:
+		- 0xFF: Input error
+		- 0x00: No error
+	________________________________________________________________________________
+_________________________________________________________________________________________________________
+ 

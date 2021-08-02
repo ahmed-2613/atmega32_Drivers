@@ -3,42 +3,23 @@
 
 #define Vector		//to extract interrupt vectors
 #include "Atmega32.h"
-
-//Turn given parameter into a string during Compile-Time Only
-#define To_String(s)	#s
-
-/*------------------------------------------------------------------*/
-/*------------------------Instructions------------------------------*/
-# define sei()		__asm__ __volatile__ ("sei" ::)		//SEI Instruction
-# define cli()		__asm__ __volatile__ ("cli" ::)		//CLI Instruction
-# define reti()		__asm__ __volatile__ ("reti" ::)	//RETI Instruction
-
-/*------------------------------------------------------------------*/
-/*-------------------------Attributes-------------------------------*/
-//Default Attribute, Disable Global interrupt
-#define ISR_BLOCK
-
-//Enable Global interrupt
-#define ISR_NOBLOCK				__attribute__(interrupt)
-
-//Basic asm used only, must place reti() at the end
-#define ISR_NAKED				__attribute__(naked)
-
-//Connect vector block to another vector block
-#define ISR_ALIASOF(vector) 	__attribute__(alias(To_String(vector)))
+#include "Interrupt_Handler.h"
 
 
 /*------------------------------------------------------------------*/
-/*-----------------------------ISR----------------------------------*/
-#ifdef __cplusplus
-	#define ISR(vector, ...)					\
-		extern "C" void vector(void) __attribute__ ((signal, used)) __VA_ARGS__; \
-		void vector (void)
-#else
-	#define ISR(vector, ...)				\
-		void vector(void) __attribute__ ((signal, used)) __VA_ARGS__; \
-		void vector (void)
-#endif /* __cplusplus */
+/*-----------------------Global Interrupt---------------------------*/
+//Enable/Disable Global Interrupt
+uint8_t Global_Interrupt_Configure(uint8_t State);
 
+/*------------------------------------------------------------------*/
+/*---------------------External Interrupts--------------------------*/
+//Set External Interrupt
+uint8_t External_Interrupt_Configure(uint8_t INT, uint8_t State);
+
+//External Interrupt Trigger Configuration
+uint8_t Interrupt_Trigger_Configure(uint8_t INT, uint8_t Trigger);
+
+//External Interrupt Flag Clear
+uint8_t Interrupt_Flag_Clear(uint8_t INT);
 
 #endif /* INTERRUPT_H */
