@@ -1,6 +1,5 @@
 #include "Std_Types.h"
 #include "Algobit.h"
-#define Register
 #include "Atmega32.h"
 
 /*------------------------------------------------------------------*/

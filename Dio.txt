@@ -1,13 +1,24 @@
 This file holds a simple but well-explained documentation of the Dio (Digital Input/Output) peripheral.
-The Dio Driver consist of some functions and definitions that will be discussed in here.
+The Dio Driver consist of functions that will be discussed in here.
 
-Dio(Digital Input/Output) Drivers is used for initialization and usage support of channels. Channels are 
-the pins of MCU. This driver will set channels as Digital Input or Digital Output.
+Dio(Digital Input/Output) Drivers is used for initialization and usage support of channels.
+_________________________________________________________________________________________________________
 
-Registers adresses and other informations used to build this driver are taken from Atmega32_Datasheet.
+Usage:-
+- User must only include Dio.h.
+- After including, User can use functions illustrated below to preform needed tasks.
+- For each function, user is responsible for suplying correct arguments.
+- Although all functions have security mechanisms, still some arguments may seem valid but badly alter the wanted behaviour.
+- Security mechanisms is checking if given arguments are valid.
+- Every function is supplied with a know return value that can be used for debugging. 
+- An LCD could be used as a better debugging method.
+- Always be aware of Global Pullup Configuration as it could cause trouble with lack of care.
+- When writing to or reading from a channel, make sure this channel is set with proper direction.
+- For channels without equivalent directions, the system will cancel reading or writing operations.
+- Setting Pull-Up configuration could be done either in the direction setting phase, or later in the code. 
+_________________________________________________________________________________________________________
 
-
-This Driver Consist of 6 Topics of Functions:
+This Driver Consist of 6 Topics of Functions:	
 1- Direction Set Functions:
 	Used to Set the direction of a given (Pin/Port/Upper_Port/Lower_Port) with a digital direction(Input, Output) with an optional
 	feature to set as (Input_Pullup).
@@ -27,7 +38,6 @@ This Driver Consist of 6 Topics of Functions:
 6- Pullup Configurations:
 	6.1- Used to configure pre-directed as an Input a given (Pin/Port/Upper_Port/Lower_Port) with a Pullup Resistor Configuration.
 	6.2- Used to Globaly disable/enable Pullup Resistor Configurations.  
-
 _________________________________________________________________________________________________________
 
 Keywords:
@@ -50,9 +60,9 @@ Dependencies:
 _________________________________________________________________________________________________________
 
 Driver Functionality:
-- Set Direction, Read and Write to a Pin.					
-- Get Direction of a certain Pin.							
-- Toggle Output value of a cetain Pin.						
+- Set Direction, Read and Write to a Pin.
+- Get Direction of a certain Pin.
+- Toggle Output value of a cetain Pin.
 - Set Direction, Read and Write to an entire Port.			
 - Set Direction, Read and Write to one half of a Port.		
 - Configure I/P Pins with Pull-Up Resistors.
@@ -60,7 +70,7 @@ Driver Functionality:
 _________________________________________________________________________________________________________
 
 Direction/State Set Functions:-
-
+	
 - uint8_t Dio_Set_Pin(uint8_t Pin, uint8_t State);
 	Set Direction of one channel either as Digital I/O.
 	
@@ -111,7 +121,7 @@ Direction/State Set Functions:-
 ________________________________________________________________________________________________________
 
 Direction/State get Functions:-
-
+	
 - uint8_t Get_Pin_Status(uint8_t Pin);
 	Get Direction of a pin.
 	

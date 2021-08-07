@@ -1,7 +1,7 @@
 #ifndef INTERRUPT_H
 #define INTERRUPT_H
 
-#define Vector		//to extract interrupt vectors
+#include "Std_Types.h"
 #include "Atmega32.h"
 #include "Interrupt_Handler.h"
 
@@ -13,7 +13,7 @@ uint8_t Global_Interrupt_Configure(uint8_t State);
 
 /*------------------------------------------------------------------*/
 /*---------------------External Interrupts--------------------------*/
-//Set External Interrupt
+//External Interrupt Configuration
 uint8_t External_Interrupt_Configure(uint8_t INT, uint8_t State);
 
 //External Interrupt Trigger Configuration

@@ -1,8 +1,5 @@
-#define Register
 #include "Std_Types.h"
 #include "Algobit.h"
-
-
 #include "Atmega32.h"
 
 /*------------------------------------------------------------------*/
@@ -440,7 +437,7 @@ uint8_t Dio_Lower_Read(uint8_t Group)
 /*------------------------------------------------------------------*/
 /*-------------------Pull_Up Configuration--------------------------*/
 
-//Configure/De-Configure Input Channels with Pull-Up Configuration
+//Enable/Disable Pull-Up Configuration associated with each Input Channel
 uint8_t Dio_Pullup_Configure(uint8_t Pin, uint8_t State)
 {
 	//Input error check
@@ -456,8 +453,8 @@ uint8_t Dio_Pullup_Configure(uint8_t Pin, uint8_t State)
 }
 
 #define PUD 2
-//Configure/De-Configure All Channels with Pull-Up Configuration
-//This overrides the configuration of single pins
+//Globally Enable/Disable Pull-Up Configurations of ALL Channels
+//This overrides the Configuration of single pins
 uint8_t Global_Pullup_Configure(uint8_t State)
 {
 	//Input error check
@@ -469,7 +466,7 @@ uint8_t Global_Pullup_Configure(uint8_t State)
 	return 0x00;	//no-error indicator
 }
 
-//Get state(Enable/Disable) of the global pullup configuration
+//Get state(Enable/Disable) of the Global Pull-Up Configuration
 uint8_t Get_Global_Pullup()
 {
 	return get_bit(SFIOR, PUD);

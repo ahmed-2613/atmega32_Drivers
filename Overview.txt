@@ -1,4 +1,3 @@
-_______________________________________________________________________________________
 This repo will hold the drivers needed to activate all the peripherals in Avr Atmega32 MCU.
 
 Peripheral Feautres:

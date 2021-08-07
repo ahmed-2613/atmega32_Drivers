@@ -6,9 +6,9 @@
 
 /*------------------------------------------------------------------*/
 /*------------------------Instructions------------------------------*/
-# define sei()		__asm__ __volatile__ ("sei" ::)		//SEI Instruction
-# define cli()		__asm__ __volatile__ ("cli" ::)		//CLI Instruction
-# define reti()		__asm__ __volatile__ ("reti" ::)	//RETI Instruction
+#define sei()		__asm__ __volatile__ ("sei" ::)		//SEI Instruction
+#define cli()		__asm__ __volatile__ ("cli" ::)		//CLI Instruction
+#define reti()		__asm__ __volatile__ ("reti" ::)	//RETI Instruction
 
 /*------------------------------------------------------------------*/
 /*-------------------------Attributes-------------------------------*/

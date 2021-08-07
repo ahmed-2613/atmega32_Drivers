@@ -5,6 +5,14 @@ Interrupt Interface Driver is used to configure External Interrupts and Global I
 
 ________________________________________________________________________________________________________
 
+Usage:-
+- User must only include Interrupt.h
+- Then, user can use functions illustrated below to preform needed tasks.
+- For each function, user is responsible for suplying correct arguments.
+- Although functions checks validity of parameters, some parameters may seem valid, but are incorrect.
+- Each function is provided with a return value for invalid arguments which may be used for debugging.
+________________________________________________________________________________________________________
+
 Dependencies:
 - Std_Types.h
 - Interrupt_Handler.h

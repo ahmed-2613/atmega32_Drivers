@@ -1,10 +1,18 @@
 This file holds a simple but well-explained documentation of the Interrupt Handler Driver.
-Interrupt Handler Driver consists of some macro-like functions and definitions that will be discussed in here.
+Interrupt Handler Driver consists of macro-like functions and macro definitions that will be discussed in here.
+
+Interrupt Handler Driver defines ISR(Interrupt Service Routine) a function to handle interrupts along with it's
+attributes(arguments).
 
 ________________________________________________________________________________________________________
 
+Usage:-
+- This driver can be used solely by including Interrupt_Handler.h
+- user then use ISR to handle Interrupts
+________________________________________________________________________________________________________
+
 Dependencies:
-- Atmega32.h
+- None
 _________________________________________________________________________________________________________
 
 Driver Functionality:

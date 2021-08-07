@@ -23,7 +23,4 @@
 #define insert_lower(byte, value)	(byte = (byte & 0xF0) | value)				//Set values of half a byte by a given value
 
 
-//Full size operations
-#define toggle_variable(var)	(var ^= 0xFF);	//Toggle bits of a given variable
-
 #endif

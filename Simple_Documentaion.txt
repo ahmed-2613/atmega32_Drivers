@@ -8,9 +8,10 @@ _____________________________________________________________________
 Bit_Manipulation.h
 - Bitwise Operations
 - Half-Byte Operations
-- Full Size Operations
 _____________________________________________________________________
 Atmega32.h:
+- Registers adresses
+- Vectors definitions
 - logical states
 - Groups-Ports
 - Pins
