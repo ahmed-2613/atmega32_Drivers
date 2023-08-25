@@ -1,21 +1,23 @@
-This file holds a simple but well-explained documentation of the Dio (Digital Input/Output) peripheral.
-The Dio Driver consist of functions that will be discussed in here.
+This file holds a simple but well-explained documentation of the DIO (Digital Input/Output) peripheral.
+The DIO Driver consist of functions that will be discussed in here.
 
-Dio(Digital Input/Output) Drivers is used for initialization and usage support of channels.
+DIO(Digital Input/Output) Drivers is used for initialization and usage support of channels.
 _________________________________________________________________________________________________________
 
 Usage:-
-- User must only include Dio.h.
+- User should only include DIO.h .
+- If there is a typedef conflict, you should comment the " #include "Std_Types.h" " line from DIO.h
 - After including, User can use functions illustrated below to preform needed tasks.
 - For each function, user is responsible for suplying correct arguments.
 - Although all functions have security mechanisms, still some arguments may seem valid but badly alter the wanted behaviour.
 - Security mechanisms is checking if given arguments are valid.
-- Every function is supplied with a know return value that can be used for debugging. 
-- An LCD could be used as a better debugging method.
+- Every function is supplied with a known return value that can be used for debugging. 
+- An LCD could be used as a better debugging method by displaying the return of each function.
 - Always be aware of Global Pullup Configuration as it could cause trouble with lack of care.
 - When writing to or reading from a channel, make sure this channel is set with proper direction.
 - For channels without equivalent directions, the system will cancel reading or writing operations.
 - Setting Pull-Up configuration could be done either in the direction setting phase, or later in the code. 
+- Setting Pull-Up configuration is recommended in the directiong setting phase because user could do whole or half port in one line.
 _________________________________________________________________________________________________________
 
 This Driver Consist of 6 Topics of Functions:	
@@ -36,12 +38,13 @@ This Driver Consist of 6 Topics of Functions:
 	Used to Get the pre-written logical_value(Logic_Low, Logic_High) From a given (Pin/Port/Upper_Port/Lower_Port).
 
 6- Pullup Configurations:
-	6.1- Used to configure pre-directed as an Input a given (Pin/Port/Upper_Port/Lower_Port) with a Pullup Resistor Configuration.
-	6.2- Used to Globaly disable/enable Pullup Resistor Configurations.  
+	6.1- Used to configure pre-directed as an Input a given Pin with a Pullup Resistor Configuration.
+	6.2- Used to Globaly disable/enable Pullup Resistor Configurations.
+	Note: enable mean activate Pullup configuration for channels pre-configured as input pullup. 
 _________________________________________________________________________________________________________
 
 Keywords:
-- Dio:	 Digital Input/Output
+- DIO:	 Digital Input/Output
 - Group: An alias of Port, and it indicates the port number.
 - Pin:	 An alias of Channel, a bi-directional electerical channel.
 - Port:	 A group of consecutive 7 pins numbered from Px0:Px7.
@@ -59,7 +62,7 @@ Dependencies:
 - Atmega32.h
 _________________________________________________________________________________________________________
 
-Driver Functionality:
+Driver Functionalities:
 - Set Direction, Read and Write to a Pin.
 - Get Direction of a certain Pin.
 - Toggle Output value of a cetain Pin.
@@ -69,21 +72,40 @@ Driver Functionality:
 - Global Pull-Up Disable/Enable.
 _________________________________________________________________________________________________________
 
+Error Return Values:-
+- 0xFF/0xFFF	:		Indicates Input Error
+- 0xFE/0xFFE	:		indicates inequivalente direction and used function
+- 0x00			:		indicates No error
+Note: These values aren't absoulte, you should see functions description below.
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
+
 Direction/State Set Functions:-
 	
-- uint8_t Dio_Set_Pin(uint8_t Pin, uint8_t State);
+- uint8_t DIO_Set_Pin(uint8_t Pin, uint8_t State);
 	Set Direction of one channel either as Digital I/O.
 	
 	Parameters:
-		 uint8_t pin: "Port-Pin Compound" of Port number and Pin number.
-		 uint8_t state: Desired state as Input/Output.
+		 uint8_t pin: "Port-Pin Compound" of Port number and Pin number. (From ATmega32.h file)
+		 uint8_t state: Desired state as Input/Output. (From ATmega32.h file)
 	
 	Return type:
 		0xFF: Input Parameters Error
 		0x00: Indicates no error
+		
+	examples:-
+		DIO_Set_Pin(PC2, Input);
+		DIO_Set_Pin(PA7, Input_Pullup);
+		DIO_Set_Pin(PB5, Output);
+		
+		uint8_t x = DIO_Set_Pin(PB5, Output);
+		if (x == 0xFF)
+			LCD_Display("Input Error");
 	________________________________________________________________________________	
 
-- uint8_t Dio_Set_Port(uint8_t Group, uint8_t State);
+- uint8_t DIO_Set_Port(uint8_t Group, uint8_t State);
 	Set the same Direction for a whole Port either as Digital I/O.
 	
 	Parameters:
@@ -93,9 +115,14 @@ Direction/State Set Functions:-
 	Return type:
 		0xFF: Input Parameters Error
 		0x00: Indicates no error
+	
+	examples:-
+		DIO_Set_Port(GroupA, Input);
+		DIO_Set_Port(PortB, Input_Pullup);
+		DIO_Set_Port(GroupD, Output);
 	________________________________________________________________________________
 	
-- void Dio_Set_Upper(uint8_t Group, uint8_t State);
+- uint8_t DIO_Set_Upper(uint8_t Group, uint8_t State);
 	Set the same Direction for a upper half of a Port either as Digital I/O.
 	
 	Parameters:
@@ -105,9 +132,14 @@ Direction/State Set Functions:-
 	Return type:
 		0xFF: Input Parameters Error
 		0x00: Indicates no error
+		
+	examples:-
+		DIO_Set_Upper(GroupA, Input);
+		DIO_Set_Upper(GroupC, Input_Pullup);
+		DIO_Set_Upper(PortD, Output);
 	________________________________________________________________________________
 	
-- void Dio_Set_Lower(uint8_t Group, uint8_t State);
+- uint8_t DIO_Set_Lower(uint8_t Group, uint8_t State);
 	Set the same Direction for a lower half of a Port either as Digital I/O.
 	
 	Parameters:
@@ -117,12 +149,17 @@ Direction/State Set Functions:-
 	Return type:
 		0xFF: Input Parameters Error
 		0x00: Indicates no error
+	
+	examples:-
+		DIO_Set_Lower(GroupA, Input);
+		DIO_Set_Lower(GroupC, Input_Pullup);
+		DIO_Set_Lower(GroupD, Output);
 	________________________________________________________________________________
 ________________________________________________________________________________________________________
 
 Direction/State get Functions:-
 	
-- uint8_t Get_Pin_Status(uint8_t Pin);
+- uint8_t DIO_Get_Pin_Status(uint8_t Pin);
 	Get Direction of a pin.
 	
 	Parameters:
@@ -131,12 +168,42 @@ Direction/State get Functions:-
 	Return type:
 		0xFF: Input Parameters Error
 		0, 1: Direction of a given pin number.
+	
+	examples:-
+		uint8_t x = DIO_Set_Lower(GroupA, Input);
+		
+		if(x == 0xFF)
+			LCD_Display("Input Error");
+		else if(x == 0)
+			LCD_Display("Pin direction is Input");
+		else if (x == 1)
+			LCD_Display("Pin direction is Output");
+	________________________________________________________________________________
+
+- uint8_t DIO_Get_Port_Direction(uint8_t Group);
+	Get data stored in the Direction Register of a specified port.
+	
+	Parameters:
+		 uint8_t Group: Port number.
+	
+	Return type:
+		0xFF: Input Parameters Error
+		uint8_t: Data stored in direction register.
+	
+		examples:-
+		uint8_t x = DIO_Set_Lower(GroupA, Input);
+		
+		if(x == 0xFF)
+			LCD_Display("Input Error");
+		else {
+			LCD_Display("Data stored in direction register for PortA is %d", x);
+		}
 	________________________________________________________________________________
 ________________________________________________________________________________________________________
 
 O/P Write Functions:-
 
-- uint8_t Dio_Pin_Write(uint8_t Pin, uint8_t Value);
+- uint8_t DIO_Pin_Write(uint8_t Pin, uint8_t Value);
 	Write logical states to a given pin.
 	
 	Parameters:
@@ -145,10 +212,11 @@ O/P Write Functions:-
 		
 	Return type:
 		0xFF: Input Parameters Error
+		0xFE: Trying to write on inputt channel
 		0x00: No error
 	________________________________________________________________________________
 
-- uint8_t Dio_Pin_Toggle(uint8_t Pin);
+- uint8_t DIO_Pin_Toggle(uint8_t Pin);
 	Toggle logical O/P value of a given pin.
 	
 	Parameters:
@@ -156,10 +224,11 @@ O/P Write Functions:-
 		
 	Return type:
 		0xFF: Input Parameters Error
+		0xFE: Trying to write on inputt channel
 		0x00: No error
 	________________________________________________________________________________
 
-- uint8_t Dio_Port_Write(uint8_t Group, uint8_t Value);
+- uint8_t DIO_Port_Write(uint8_t Group, uint8_t Value);
 	Write one-byte-size number to a given port.
 	
 	Parameters:
@@ -168,10 +237,11 @@ O/P Write Functions:-
 		
 	Return type:
 		0xFF: Input Parameters Error
+		0xFE: Trying to write on inputt channel
 		0x00: No error
 	________________________________________________________________________________
 
-- uint8_t Dio_Upper_Write(uint8_t Group, uint8_t Value);
+- uint8_t DIO_Upper_Write(uint8_t Group, uint8_t Value);
 	Write 4-bit-size number to an upper half of a given port. 
 	
 	Parameters:
@@ -180,10 +250,15 @@ O/P Write Functions:-
 		
 	Return type:
 		0xFF: Input Parameters Error
+		0xFE: Trying to write on inputt channel
 		0x00: No error
+	
+	Note: "Value" should be lower 4 bits, if not, then the function returns error
+		  ex: 0b00001001 (Accepted),  0b010010000 (Rejected)
+		  
 	________________________________________________________________________________
 
-- uint8_t Dio_Lower_Write(uint8_t Group, uint8_t Value);
+- uint8_t DIO_Lower_Write(uint8_t Group, uint8_t Value);
 	Write 4-bit-size number to an lower half of a given port.
 	
 	Parameters:
@@ -192,13 +267,17 @@ O/P Write Functions:-
 		
 	Return type:
 		0xFF: Input Parameters Error
+		0xFE: Trying to write on inputt channel
 		0x00: No error
+	
+	Note: "Value" should be lower 4 bits, if not, then the function returns error
+		  ex: 0b00001001 (Accepted),  0b010010000 (Rejected)
 	________________________________________________________________________________
 ________________________________________________________________________________________________________
 
 O/P Get Functions:-
 
-- uint8_t Get_Pin_Value(uint8_t Pin);
+- uint8_t DIO_Get_Pin_Value(uint8_t Pin);
 	Get logical driven O/P value of a given pin.
 	
 	Parameters:
@@ -209,7 +288,7 @@ O/P Get Functions:-
 		0, 1: No error
 	________________________________________________________________________________
 
-- uint8_t Get_Port_Value(uint8_t Group);
+- uint8_t DIO_Get_Port_Value(uint8_t Group);
 	Get one-byte-size value to a given port.
 	
 	Parameters:
@@ -220,7 +299,7 @@ O/P Get Functions:-
 		else: one-byte-size number.
 	________________________________________________________________________________
 
-- uint8_t Get_Upper_Value(uint8_t Group);
+- uint8_t DIO_Get_Upper_Value(uint8_t Group);
 	Get 4-bit-size value of an upper half of a given port.
 	
 	Parameters:
@@ -231,7 +310,7 @@ O/P Get Functions:-
 		else: 4-bit-size number.
 	________________________________________________________________________________
 
-- uint8_t Get_Lower_Value(uint8_t Group);
+- uint8_t DIO_Get_Lower_Value(uint8_t Group);
 	Get 4-bit-size value of an lower half of a given port.
 	
 	Parameters:
@@ -243,9 +322,9 @@ O/P Get Functions:-
 	________________________________________________________________________________
 ________________________________________________________________________________________________________
 
-O/P Read Functions:-
+I/P Read Functions:-
 
-- uint8_t Dio_Pin_Read(uint8_t Pin);
+- uint8_t DIO_Pin_Read(uint8_t Pin);
 	Read input value in a given pin.
 	
 	Parameters:
@@ -253,10 +332,11 @@ O/P Read Functions:-
 		
 	Return type:
 		0xFF: Input Parameters Error
-		0, 1: Normal return data
+		0xFE: Trying to read from output channel
+		0, 1: Normal return data / No error
 	________________________________________________________________________________
 
-- uint16_t Dio_Port_Read(uint8_t Group);
+- uint16_t DIO_Port_Read(uint8_t Group);
 	Read input value of an entire given port at once.
 	
 	Parameters:
@@ -264,10 +344,11 @@ O/P Read Functions:-
 		
 	Return type:
 		0xFFF: Input Parameters Error
+		0xFFE: Trying to read from output Port
 		else: 8-bit-size value.
 	________________________________________________________________________________
 	
-- uint8_t Dio_Upper_Read(uint8_t Group);
+- uint8_t DIO_Upper_Read(uint8_t Group);
 	Read input value of an upper half of a given port. 
 	
 	Parameters:
@@ -275,9 +356,10 @@ O/P Read Functions:-
 		
 	Return type:
 		0xFF: Input Parameters Error
+		0xFE: Trying to read from output Upper Port
 		else: 4-bit-size number.
 	________________________________________________________________________________
-- uint8_t Dio_Lower_Read(uint8_t Group);
+- uint8_t DIO_Lower_Read(uint8_t Group);
 	Read input value of an lower half of a given port.
 	
 	Parameters:
@@ -285,13 +367,14 @@ O/P Read Functions:-
 		
 	Return type:
 		0xFF: Input Parameters Error
+		0xFE: Trying to read from output Lower Port
 		else: 4-bit-size number.
 	________________________________________________________________________________
 ________________________________________________________________________________________________________
 
 Pullup Resistor Configuration:-
 
-- uint8_t Dio_Pullup_Set(uint8_t Pin);
+- uint8_t DIO_Pullup_Set(uint8_t Pin);
 	Configure given Pin with Pullup Resistor.
 	
 	Parameters:
@@ -302,7 +385,7 @@ Pullup Resistor Configuration:-
 		0x00: Indicates no error
 	________________________________________________________________________________
 		
-- uint8_t Dio_Pullup_Reset(uint8_t Pin);
+- uint8_t DIO_Pullup_Reset(uint8_t Pin);
 	Deconfigure given Pin with Pullup Resistor.
 	
 	Parameters:
@@ -313,7 +396,7 @@ Pullup Resistor Configuration:-
 		0x00: Indicates no error
 	________________________________________________________________________________
 	
-- uint8_t Global_Pullup_Configure(uint8_t State);
+- uint8_t DIO_Global_Pullup_Configure(uint8_t State);
 	Enable/Disable All Pullup Functionality
 	
 	Parameters:

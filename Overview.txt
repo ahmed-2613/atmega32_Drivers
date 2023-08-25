@@ -1,20 +1,22 @@
-This repo will hold the drivers needed to activate all the peripherals in Avr Atmega32 MCU.
+This repo will hold the MCAL drivers needed to activate all the peripherals in Avr Atmega32 MCU.
 
-Peripheral Feautres:
-- 32x Prorgrammable Channels.
-- Interrupt Unit.
-- 2x 8bit timer/counter with prescalers and compare modes.
-- 1x 16bit timer/counter with prescaler,compare mode and input capture.
-- Real Time counter with separate oscillator.
-- 4x PWM Channels.
-- 8x 10bit ADC Channels.
-- SPI Serial Interface.
-- USART Serial Interface.
-- I2C Serial Interface.
+Drivers:
+- DIO.
+- Interrupt.
+- ADC.
 - Analog Comparator.
-- EEPROM
-- FLASh
-- Power Management with 6x sleep modes.
-- System Control.
-- Watchdog timer with seperated oscillator.
-_______________________________________________________________________________________
+- Timer/Counter 0.
+- Timer/Counter 1.
+- Timer/Counter 2.
+- PWM.
+- SPI.
+- USART.
+- TWI.
+- EEPROM.
+- FLASH.
+- Power Management.
+- Watchdog Timer.
+
+
+
+_______________________________________________________________________

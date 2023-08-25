@@ -34,6 +34,11 @@
 #define PIND	 	reg_addr_8(0x30)
 /* !Registers */
 
+/* Special_Bits */
+#define PUD 2		//Pullup Disable
+
+/* !Special_Bits */
+
 
 /* Vectors */
 #define Vector_No(n)	__vector_ ## n		//Generate vector address from vector table
@@ -88,18 +93,19 @@
 /* !Vectors */
 
 
-//Digital States
+//Digital I/O States (DIO)
 #define Input 0
 #define Output 1
 #define Input_Pullup 2
 
 //Logical States
-#define low  0
+#define Low  0
 #define Logic_Low  0
 #define Logic_High 1
 #define High 1
 #define Disable 0
 #define Enable 	1
+
 
 //Triggers
 #define Low_Level			0x0
@@ -153,6 +159,7 @@
 #define PB5 0x15
 #define PB6 0x16
 #define PB7 0x17
+
 #define PC0 0x20
 #define PC1 0x21
 #define PC2 0x22
@@ -171,4 +178,4 @@
 #define PD6 0x36
 #define PD7 0x37
 
-#endif //ATMEGA32
+#endif /* ATMEGA32 */

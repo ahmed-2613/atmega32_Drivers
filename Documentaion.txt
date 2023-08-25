@@ -1,20 +1,26 @@
 Std_Types.h:
-- Type-define each premetive type with standard name.
+- Define premetive data types with Standard names.
 	- unsigned & signed - char - short int 
 	- long int - long long int - float
 	- double - long double
 - Macro-define maximum and minimum values of each premetive type.
+
 _____________________________________________________________________
-Bit_Manipulation.h
+
+Algobit.h
 - Bitwise Operations
 - Half-Byte Operations
+
 _____________________________________________________________________
+
 Atmega32.h:
 - Registers adresses
 - Vectors definitions
 - logical states
-- Groups-Ports
+- Groups/Ports
 - Pins
-- Hexa-Compound Structure
 - Port-Pin Compound
+
 _____________________________________________________________________
+
+Documentation of Each driver will be in <driver>.txt

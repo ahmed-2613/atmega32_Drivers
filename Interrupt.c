@@ -6,7 +6,7 @@
 /*-----------------------Global Interrupt---------------------------*/
 uint8_t Global_Interrupt_Configure(uint8_t State)
 {
-	if(State > 1)
+	if(State > Enable)
 		return 0xFF;	//Input error
 
 	State ? set_bit(SREG, 7) : reset_bit(SREG, 7);
@@ -19,7 +19,7 @@ uint8_t Global_Interrupt_Configure(uint8_t State)
 //Set External Interrupt
 uint8_t External_Interrupt_Configure(uint8_t INT, uint8_t State)
 {
-	if(State > 1)
+	if(State > Enable)
 		return 0xFF;			//Input error
 
 	switch(INT)

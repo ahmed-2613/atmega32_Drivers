@@ -1,11 +1,11 @@
 #include "Std_Types.h"
 #include "Algobit.h"
-#include "Atmega32.h"
+#include "ATmega32.h"
 
 /*------------------------------------------------------------------*/
 /*---------------------------Direction Get---------------------------------*/
 //Get the direction of a given Pin
-uint8_t Get_Pin_Direction(uint8_t Pin)
+uint8_t DIO_Get_Pin_Direction(uint8_t Pin)
 {
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
@@ -26,7 +26,7 @@ uint8_t Get_Pin_Direction(uint8_t Pin)
 	return 0xFF;	//Group error
 }
 
-uint8_t Get_Port_Direction(uint8_t Group)
+uint8_t DIO_Get_Port_Direction(uint8_t Group)
 {
 	switch (Group)
 	{
@@ -55,10 +55,10 @@ void Port_Modify(uint8_t Group, uint8_t Value)
 }
 
 //Write to a single pin
-uint8_t Dio_Pin_Write(uint8_t Pin, uint8_t Value)
+uint8_t DIO_Pin_Write(uint8_t Pin, uint8_t Value)
 {
-	if(Get_Pin_Direction(Pin) != Output)
-			return 0xFF;	//error writing on Input Channel
+	if(DIO_Get_Pin_Direction(Pin) != Output)
+			return 0xFE;	//error writing on Input Channel
 
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
@@ -83,10 +83,10 @@ uint8_t Dio_Pin_Write(uint8_t Pin, uint8_t Value)
 }
 
 //Toggle O/P value of a given pin
-uint8_t Dio_Pin_Toggle(uint8_t Pin)
+uint8_t DIO_Pin_Toggle(uint8_t Pin)
 {
-	if(Get_Pin_Direction(Pin) != Output)
-		return 0xFF;	//error writing on Input Channel
+	if(DIO_Get_Pin_Direction(Pin) != Output)
+		return 0xFE;	//error writing on Input Channel
 
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
@@ -109,10 +109,10 @@ uint8_t Dio_Pin_Toggle(uint8_t Pin)
 }
 
 //Write to a whole Port
-uint8_t Dio_Port_Write(uint8_t Group, uint8_t Value)
+uint8_t DIO_Port_Write(uint8_t Group, uint8_t Value)
 {
-	if(Get_Port_Direction(Group) != 0xFF)
-		return 0xFF;	//error writing on Non-Output Port
+	if(DIO_Get_Port_Direction(Group) != 0xFF)
+		return 0xFE;	//error writing on Non-Output Port
 
 	switch(Group)
 	{
@@ -128,10 +128,13 @@ uint8_t Dio_Port_Write(uint8_t Group, uint8_t Value)
 }
 
 //Write to half a Port
-uint8_t Dio_Upper_Write(uint8_t Group, uint8_t Value)
+uint8_t DIO_Upper_Write(uint8_t Group, uint8_t Value)
 {
-	if(get_upper(Get_Port_Direction(Group)) != 0x0F)
-		return 0xFF;	//error writing on Non-Output Port
+	if(get_upper(DIO_Get_Port_Direction(Group)) != 0x0F)
+		return 0xFE;	//error writing on Non-Output Port
+
+	if(get_upper(Value) == 0x00)
+		return 0xFF;	//Input Error
 
 	switch(Group)
 	{
@@ -145,10 +148,14 @@ uint8_t Dio_Upper_Write(uint8_t Group, uint8_t Value)
 
 	return 0x00; //No error
 }
-uint8_t Dio_Lower_Write(uint8_t Group, uint8_t Value)
+
+uint8_t DIO_Lower_Write(uint8_t Group, uint8_t Value)
 {
-	if(get_lower(Get_Port_Direction(Group)) != 0x0F)
-		return 0xFF;	//error writing on Non-Output Port
+	if(get_lower(DIO_Get_Port_Direction(Group)) != 0x0F)
+		return 0xFE;	//error writing on Non-Output Port
+
+	if(get_upper(Value) == 0x00)
+			return 0xFF;	//Input Error
 
 	switch(Group)
 	{
@@ -165,7 +172,7 @@ uint8_t Dio_Lower_Write(uint8_t Group, uint8_t Value)
 
 
 //Get driven O/P value of a pin
-uint8_t Get_Pin_Value(uint8_t Pin)
+uint8_t DIO_Get_Pin_Value(uint8_t Pin)
 {
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
@@ -186,7 +193,7 @@ uint8_t Get_Pin_Value(uint8_t Pin)
 }
 
 //Get driven O/P value of a port
-uint16_t Get_Port_Value(uint8_t Group)
+uint16_t DIO_Get_Port_Value(uint8_t Group)
 {
 	switch(Group)
 	{
@@ -200,7 +207,7 @@ uint16_t Get_Port_Value(uint8_t Group)
 }
 
 //Get driven O/P value of half a port
-uint8_t Get_Upper_Value(uint8_t Group)
+uint8_t DIO_Get_Upper_Value(uint8_t Group)
 {
 	switch(Group)
 	{
@@ -212,7 +219,7 @@ uint8_t Get_Upper_Value(uint8_t Group)
 
 	return 0xFF;	//Group error
 }
-uint8_t Get_Lower_Value(uint8_t Group)
+uint8_t DIO_Get_Lower_Value(uint8_t Group)
 {
 	switch(Group)
 	{
@@ -230,7 +237,7 @@ uint8_t Get_Lower_Value(uint8_t Group)
 /*-----------------------Direction Set-----------------------------*/
 
 //Set Direction of a single pin
-uint8_t Dio_Set_Pin(uint8_t Pin, uint8_t State)
+uint8_t DIO_Set_Pin(uint8_t Pin, uint8_t State)
 {
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
@@ -266,7 +273,7 @@ uint8_t Dio_Set_Pin(uint8_t Pin, uint8_t State)
 }
 
 //Set direction of a whole port
-uint8_t Dio_Set_Port(uint8_t Group, uint8_t State)
+uint8_t DIO_Set_Port(uint8_t Group, uint8_t State)
 {
 	if(State == Input_Pullup)
 	{
@@ -296,7 +303,7 @@ uint8_t Dio_Set_Port(uint8_t Group, uint8_t State)
 }
 
 //Set direction of a half a port
-uint8_t Dio_Set_Upper(uint8_t Group, uint8_t State)
+uint8_t DIO_Set_Upper(uint8_t Group, uint8_t State)
 {
 	if(State == Input_Pullup)
 	{
@@ -325,7 +332,7 @@ uint8_t Dio_Set_Upper(uint8_t Group, uint8_t State)
 
 	return 0x00;		//No error
 }
-uint8_t Dio_Set_Lower(uint8_t Group, uint8_t State)
+uint8_t DIO_Set_Lower(uint8_t Group, uint8_t State)
 {
 	if(State == Input_Pullup)
 	{
@@ -360,10 +367,10 @@ uint8_t Dio_Set_Lower(uint8_t Group, uint8_t State)
 /*---------------------------Input----------------------------------*/
 
 //Read from a single pin
-uint8_t Dio_Pin_Read(uint8_t Pin)
+uint8_t DIO_Pin_Read(uint8_t Pin)
 {
-	if(Get_Pin_Direction(Pin) == Output)
-		return 0xFF;	//error read from output channel
+	if(DIO_Get_Pin_Direction(Pin) == Output)
+		return 0xFE;	//error read from output channel
 
 	uint8_t Group = get_upper(Pin);
 	reset_upper(Pin);
@@ -384,10 +391,10 @@ uint8_t Dio_Pin_Read(uint8_t Pin)
 }
 
 //Read from a whole Port
-uint16_t Dio_Port_Read(uint8_t Group)
+uint16_t DIO_Port_Read(uint8_t Group)
 {
-	if(Get_Port_Direction(Group) != 0x00)
-		return 0xFF;	//error reading from Non-Input Port
+	if(DIO_Get_Port_Direction(Group) != 0x00)
+		return 0xFFE;	//error reading from Non-Input Port
 
 	switch(Group)
 	{
@@ -402,10 +409,10 @@ uint16_t Dio_Port_Read(uint8_t Group)
 }
 
 //Read from half a Port
-uint8_t Dio_Upper_Read(uint8_t Group)
+uint8_t DIO_Upper_Read(uint8_t Group)
 {
-	if(get_upper(Get_Port_Direction(Group)) != 0x0F)
-		return 0xFF;	//error reading from Non-Input Port
+	if(get_upper(DIO_Get_Port_Direction(Group)) != 0x0F)
+		return 0xFE;	//error reading from Non-Input Port
 
 	switch(Group)
 	{
@@ -419,8 +426,8 @@ uint8_t Dio_Upper_Read(uint8_t Group)
 }
 uint8_t Dio_Lower_Read(uint8_t Group)
 {
-	if(get_lower(Get_Port_Direction(Group)) != 0x0F)
-		return 0xFF;	//error reading from Non-Input Port
+	if(get_lower(DIO_Get_Port_Direction(Group)) != 0x0F)
+		return 0xFE;	//error reading from Non-Input Port
 
 	switch(Group)
 	{
@@ -438,24 +445,31 @@ uint8_t Dio_Lower_Read(uint8_t Group)
 /*-------------------Pull_Up Configuration--------------------------*/
 
 //Enable/Disable Pull-Up Configuration associated with each Input Channel
-uint8_t Dio_Pullup_Configure(uint8_t Pin, uint8_t State)
+uint8_t DIO_Pullup_Configure(uint8_t Pin, uint8_t State)
 {
+	uint8_t Group = get_upper(Pin);
+
 	//Input error check
 	if(get_lower(Pin) > Pin7)
 		return 0xFF;
 
-	if(Get_Pin_Direction(Pin) != Input)
+	if(DIO_Get_Pin_Direction(Pin) != Input)
 		return 0xFF;
 
-	Port_Modify(Pin, State);
-
+	reset_upper(Pin);
+	switch(Group)
+	{
+	case GroupA: State ? set_bit(PORTA, Pin) : reset_bit(PORTA, Pin); break;
+	case GroupB: State ? set_bit(PORTB, Pin) : reset_bit(PORTB, Pin); break;
+	case GroupC: State ? set_bit(PORTC, Pin) : reset_bit(PORTC, Pin); break;
+	case GroupD: State ? set_bit(PORTD, Pin) : reset_bit(PORTD, Pin); break;
+	}
 	return 0x00;
 }
 
-#define PUD 2
 //Globally Enable/Disable Pull-Up Configurations of ALL Channels
 //This overrides the Configuration of single pins
-uint8_t Global_Pullup_Configure(uint8_t State)
+uint8_t DIO_Global_Pullup_Configure(uint8_t State)
 {
 	//Input error check
 	if(State > High)
@@ -467,7 +481,7 @@ uint8_t Global_Pullup_Configure(uint8_t State)
 }
 
 //Get state(Enable/Disable) of the Global Pull-Up Configuration
-uint8_t Get_Global_Pullup()
+uint8_t DIO_Get_Global_Pullup()
 {
 	return get_bit(SFIOR, PUD);
 }

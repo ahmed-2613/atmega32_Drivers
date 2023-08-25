@@ -9,7 +9,7 @@ Usage:-
 - User must only include Interrupt.h
 - Then, user can use functions illustrated below to preform needed tasks.
 - For each function, user is responsible for suplying correct arguments.
-- Although functions checks validity of parameters, some parameters may seem valid, but are incorrect.
+- Although functions check validity of parameters, some parameters may seem valid, but are incorrect.
 - Each function is provided with a return value for invalid arguments which may be used for debugging.
 ________________________________________________________________________________________________________
 
@@ -24,6 +24,16 @@ Driver Functionality:
 - External Interrupts 	Enable/Disable
 - Interrupt Trigger Configure
 - Interrupt Flag Clear
+_________________________________________________________________________________________________________
+
+Error Return Values:-
+- 0xFF/0xFFF	:		Indicates Input Error
+- 0xFE/0xFFE	:		indicates inequivalente direction and used function
+- 0x00			:		indicates No error
+Note: These values aren't absoulte, you should see functions description below.
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
 _________________________________________________________________________________________________________
 
 Global Interrupt:-
@@ -45,8 +55,8 @@ External Interrupt:-
 	Set/Reset an external interrupt
 	
 	Parameters:
-		- INT: 		Interrupt Number
-		- State: 	Enable/Disable 
+		- INT: 		Interrupt Number (From ATmega32.h file)
+		- State: 	Enable/Disable
 	
 	Return:
 		- 0xFF: Input error
@@ -57,8 +67,8 @@ External Interrupt:-
 	Configure what will trigger external interrupts
 	
 		Parameters:
-		- INT: 		Interrupt Number
-		- trigger:	Low_Level - Logical_Change - Falling_Edge - Rising_Edge
+		- INT: 		Interrupt Number (From ATmega32.h file)
+		- trigger:	Low_Level - Logical_Change - Falling_Edge - Rising_Edge (From ATmega32.h file)
 		
 	Return:
 		- 0xFF: Input error
@@ -69,11 +79,20 @@ External Interrupt:-
 	Clear external interrupt flag
 	
 	Parameters:
-		- INT: Interrupt Number
+		- INT: Interrupt Number (From ATmega32.h file)
 		
 	Return:
 		- 0xFF: Input error
 		- 0x00: No error
 	________________________________________________________________________________
+	
+Example Code:-
+		Global_Interrupt_Configure(Enable);	//Give permission to all Interrupts to execute ISR
+		External_Interrupt_Configure(INT0, Enable);	//Enable Interrupt 0
+		Interrupt_Trigger_Configure(INT0, Falling_Edge);	//Set Trigger of INT0 as Falling_Edge
+		
+		//Next line in ISR() for example
+		Interrupt_Flag_Clear(INT0);	//Reset Flag for next Interrupt event
+
 _________________________________________________________________________________________________________
  

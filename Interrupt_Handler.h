@@ -1,7 +1,7 @@
 #ifndef INTERRUPT_HANDLER_H
 #define INTERRUPT_HANDLER_H
 
-//Turn given parameter into a string during Compile-Time Only
+//Converts given parameter into a string during Compile-Time Only
 #define To_String(s)	#s
 
 /*------------------------------------------------------------------*/

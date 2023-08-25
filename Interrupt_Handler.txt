@@ -1,7 +1,7 @@
 This file holds a simple but well-explained documentation of the Interrupt Handler Driver.
 Interrupt Handler Driver consists of macro-like functions and macro definitions that will be discussed in here.
 
-Interrupt Handler Driver defines ISR(Interrupt Service Routine) a function to handle interrupts along with it's
+Interrupt Handler Driver defines ISR(Interrupt Service Routine), a function to handle interrupts along with it's
 attributes(arguments).
 
 ________________________________________________________________________________________________________
@@ -21,6 +21,9 @@ Driver Functionality:
 - SEI/CLI/RETI Instructions
 - ISR Attributes
 - ISR(Interrupt Service Routine) Function
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
 _________________________________________________________________________________________________________
 
 Instructions:-
