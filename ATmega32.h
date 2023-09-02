@@ -1,98 +1,7 @@
 #ifndef ATMEGA32
 #define ATMEGA32
 
-/* Registers */
-#define reg_addr_8(addr)	*((volatile uint8_t*) addr)		//address for 8-bit registers
-#define reg_addr_16(addr)	*((volatile uint16_t*) addr)	//address for 16-bit registers
-
-#define SREG		reg_addr_8(0x5F)	//Status Register
-#define GICR		reg_addr_8(0x5B)	//General Interrupt Control Register
-#define GIFR		reg_addr_8(0x5A)	//General Interrupt Flag Register
-#define MCUCR		reg_addr_8(0x55)	//MCU Control Register
-#define MCUCSR		reg_addr_8(0x54)	//MCU Control Status Register
-
-#define SFIOR		reg_addr_8(0x50)	//Special Function I/O Register
-
-//GroupA Registers
-#define PORTA	 	reg_addr_8(0x3B)
-#define DDRA	 	reg_addr_8(0x3A)
-#define PINA	 	reg_addr_8(0x39)
-
-//GroupB Registers
-#define PORTB	 	reg_addr_8(0x38)
-#define DDRB	 	reg_addr_8(0x37)
-#define PINB	 	reg_addr_8(0x36)
-
-//GroupC Registers
-#define PORTC	 	reg_addr_8(0x35)
-#define DDRC	 	reg_addr_8(0x34)
-#define PINC	 	reg_addr_8(0x33)
-
-//GroupD Registers
-#define PORTD	 	reg_addr_8(0x32)
-#define DDRD	 	reg_addr_8(0x31)
-#define PIND	 	reg_addr_8(0x30)
-/* !Registers */
-
-/* Special_Bits */
-#define PUD 2		//Pullup Disable
-
-/* !Special_Bits */
-
-
-/* Vectors */
-#define Vector_No(n)	__vector_ ## n		//Generate vector address from vector table
-
-//Reset Vector
-#define RESET_vect		Vector_No(0)
-
-//External Vectors
-#define INT0_vect		Vector_No(1)	//External Interrupt Request 0
-#define INT1_vect		Vector_No(2)	//External Interrupt Request 1
-#define INT2_vect		Vector_No(3)	//External Interrupt Request 2
-
-//Timer/Counter2 Vectors
-#define TIMER2_COMP_vect		Vector_No(4)	//Timer/Counter2 Compare Match
-#define TIMER2_OVF_vect			Vector_No(5)	//Timer/Counter2 Overflow
-
-//Timer/Counter1 Vectors
-#define TIMER1_CAPT_vect		Vector_No(6)	//Timer/Counter1 Capture Event
-#define TIMER1_COMPA_vect		Vector_No(7)	//Timer/Counter1 Compare Match A
-#define TIMER1_COMPB_vect		Vector_No(8)	//Timer/Counter1 Compare Match B
-#define TIMER1_OVF_vect			Vector_No(9)	//Timer/Counter1 Overflow
-
-//Timer/Counter0 Vectors
-#define TIMER0_COMP_vect		Vector_No(10)	//Timer/Counter0 Compare Match
-#define TIMER0_OVF_vect			Vector_No(11)	//Timer/Counter0 Overflow
-
-//SPI - Serial Transfer Complete
-#define SPI_STC_vect		Vector_No(12)
-
-//USART Vectors
-#define USART_RXC_vect			Vector_No(13)	//USART, Rx Complete
-#define USART_DReg_vect			Vector_No(14)	//USART Data Register Empty
-#define USART_TXC_vect			Vector_No(15)	//USART, Tx Complete
-
-//ADC Conversion Complete
-#define ADC_vect			Vector_No(16)
-
-//EEPROM Ready
-#define EE_RDY_vect			Vector_No(17)
-
-//Analog Comparator
-#define ANA_COMP_vect		Vector_No(18)
-
-//Two-wire Serial Interface
-#define TWI_vect			Vector_No(19)
-
-//Store Program Memory Ready
-#define SPM_RDY_vect		Vector_No(20)
-
-//Default Vector
-#define Default_vect		__vector_default
-/* !Vectors */
-
-
+/* Interfacing_Definitions */
 //Digital I/O States (DIO)
 #define Input 0
 #define Output 1
@@ -178,4 +87,144 @@
 #define PD6 0x36
 #define PD7 0x37
 
-#endif /* ATMEGA32 */
+
+//ADC Channels
+#define ADC0	0x00
+#define ADC1	0x01
+#define ADC2	0x02
+#define ADC3	0x03
+#define ADC4	0x04
+#define ADC5	0x05
+#define ADC6	0x06
+#define ADC7	0x07
+
+//ADC Reference Voltage
+#define External_AREF 	0x0		//External Voltage at pin AREF
+#define AVCC_Ref 		0x1	//Use voltage on AVCC as reference
+#define Internal_Ref	0x3		//Use internal voltage of 2.56V
+
+//Left/Right Adjustment of the result
+#define Right_Adjustment 0x0
+#define Left_Adjustment 0x1
+
+//ADC Prescalers
+#define PreScaler_2		0x1
+#define PreScaler_4		0x2
+#define PreScaler_8		0x3
+#define PreScaler_16	0x4
+#define PreScaler_32	0x5
+#define PreScaler_64	0x6
+#define PreScaler_128	0x7
+
+
+/* !Interfacing_Definitions */
+
+
+/* Registers */
+#define reg_addr_8(addr)	*((volatile uint8_t*) addr)		//address for 8-bit registers
+#define reg_addr_16(addr)	*((volatile uint16_t*) addr)	//address for 16-bit registers
+
+#define SREG		reg_addr_8(0x5F)	//Status Register
+#define GICR		reg_addr_8(0x5B)	//General Interrupt Control Register
+#define GIFR		reg_addr_8(0x5A)	//General Interrupt Flag Register
+#define MCUCR		reg_addr_8(0x55)	//MCU Control Register
+#define MCUCSR		reg_addr_8(0x54)	//MCU Control Status Register
+
+#define SFIOR		reg_addr_8(0x50)	//Special Function I/O Register
+
+//GroupA Registers
+#define PORTA	 	reg_addr_8(0x3B)
+#define DDRA	 	reg_addr_8(0x3A)
+#define PINA	 	reg_addr_8(0x39)
+
+//GroupB Registers
+#define PORTB	 	reg_addr_8(0x38)
+#define DDRB	 	reg_addr_8(0x37)
+#define PINB	 	reg_addr_8(0x36)
+
+//GroupC Registers
+#define PORTC	 	reg_addr_8(0x35)
+#define DDRC	 	reg_addr_8(0x34)
+#define PINC	 	reg_addr_8(0x33)
+
+//GroupD Registers
+#define PORTD	 	reg_addr_8(0x32)
+#define DDRD	 	reg_addr_8(0x31)
+#define PIND	 	reg_addr_8(0x30)
+
+//ADC & Analog Comparator Registers
+#define ACSR	 	reg_addr_8(0x28) 	//Analog Comparator Control Status Register
+#define ADMUX	 	reg_addr_8(0x27) 	//ADC Multiplexer Selection Register
+#define ADCSRA	 	reg_addr_8(0x26) 	//ADC Control and Status Register A
+#define ADCH	 	reg_addr_8(0x25) 	//ADC Data Register High Byte
+#define ADCL	 	reg_addr_8(0x24) 	//ADC Data Register Low Byte
+#define ADCDR	 	reg_addr_16(0x24)	//ADC Data Register Both Bytes (High/Low)
+
+/* !Registers */
+
+/* Special_Bits */
+#define PUD 2		//Pullup Disable
+
+//ACSR
+#define ADEN  7		//ADC Enable
+#define ADSC  6		//ADC Start Conversion
+#define ADATE 5		//ADC Auto Trigger Enable
+#define ADIF  4		//ADC Interrupt Flag
+#define ADIE  3		//ADC Interrupt Enable
+
+/* !Special_Bits */
+
+
+/* Vectors */
+#define Vector_No(n)	__vector_ ## n		//Generate vector address from vector table
+
+//Reset Vector
+#define RESET_vect		Vector_No(0)
+
+//External Vectors
+#define INT0_vect		Vector_No(1)	//External Interrupt Request 0
+#define INT1_vect		Vector_No(2)	//External Interrupt Request 1
+#define INT2_vect		Vector_No(3)	//External Interrupt Request 2
+
+//Timer/Counter2 Vectors
+#define TIMER2_COMP_vect		Vector_No(4)	//Timer/Counter2 Compare Match
+#define TIMER2_OVF_vect			Vector_No(5)	//Timer/Counter2 Overflow
+
+//Timer/Counter1 Vectors
+#define TIMER1_CAPT_vect		Vector_No(6)	//Timer/Counter1 Capture Event
+#define TIMER1_COMPA_vect		Vector_No(7)	//Timer/Counter1 Compare Match A
+#define TIMER1_COMPB_vect		Vector_No(8)	//Timer/Counter1 Compare Match B
+#define TIMER1_OVF_vect			Vector_No(9)	//Timer/Counter1 Overflow
+
+//Timer/Counter0 Vectors
+#define TIMER0_COMP_vect		Vector_No(10)	//Timer/Counter0 Compare Match
+#define TIMER0_OVF_vect			Vector_No(11)	//Timer/Counter0 Overflow
+
+//SPI - Serial Transfer Complete
+#define SPI_STC_vect		Vector_No(12)
+
+//USART Vectors
+#define USART_RXC_vect			Vector_No(13)	//USART, Rx Complete
+#define USART_DReg_vect			Vector_No(14)	//USART Data Register Empty
+#define USART_TXC_vect			Vector_No(15)	//USART, Tx Complete
+
+//ADC Conversion Complete
+#define ADC_vect			Vector_No(16)
+
+//EEPROM Ready
+#define EE_RDY_vect			Vector_No(17)
+
+//Analog Comparator
+#define ANA_COMP_vect		Vector_No(18)
+
+//Two-wire Serial Interface
+#define TWI_vect			Vector_No(19)
+
+//Store Program Memory Ready
+#define SPM_RDY_vect		Vector_No(20)
+
+//Default Vector
+#define Default_vect		__vector_default
+/* !Vectors */
+
+#endif /* !ATMEGA32 */

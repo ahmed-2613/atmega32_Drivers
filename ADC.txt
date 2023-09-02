@@ -1,0 +1,61 @@
+Analog to Digital Converter Driver.
+
+This driver isn't complete hence this driver documentations file will only give you little
+informations for now, but, fear nothing, this driver along with it's documentations file
+will be done before you can say Jack Robinson.
+
+
+Completed Functionalities:
+- Normal ADC channels from ADC0(PA0) to ADC7(PA7).
+- Select voltage reference of all 3 modes.
+- Prescalers of all 7 modes: _2, _4, _8, _16, _32, _64, _128.
+- Conversion is done through polling not interrupt.
+
+Voltage reference:-
+- External_AREF : Voltage applied on AREF pin.
+- AVCC			: Internaly connect voltage applied on AVCC as reference.
+- Internal_Ref	: Connect internal voltage of (2.56v) as reference.
+	Note : It's fully recommended to attach external capacitor to AREF pin with ground.
+
+Prescalers: Control the speed of conversion of ADC.
+
+_________________________________________________________________________________________________________
+
+Usage:
+- run functions as described below.
+- Double make sure that all given parameters are valid and as desired.
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
+_________________________________________________________________________________________________________
+
+- uint8_t ADC_Initialize(uint8_t ref, uint8_t Adj, uint8_t prescaler);
+	Initialize Properties of ADC
+	
+	Parameters:
+		 uint8_t ref: Voltage Reference. (From ATmega32.h file)
+		 uint8_t Adj: Left/Right Adjustment. (From ATmega32.h file)
+		 uint8_t prescaler: Prescaler of ADC. (From ATmega32.h file)
+	
+	Return type:
+		0xFF: Input Parameters Error
+		0x00: Indicates no error
+
+
+	________________________________________________________________________________
+	
+- uint16_t ADC_Start_Conversion(uint8_t channel);
+	Start Conversion
+
+	Parameters:
+		 uint8_t channel: Channel from  ADC0-ADC7. (From ATmega32.h file)
+	
+	Return type:
+		0xFFFF: Input Parameters Error.
+		other : converted Value.
+	________________________________________________________________________________
+	
+- examples:-
+	ADC_Initialize(External_AREF, Right_Adjustment, Prescaler_16);
+	unit8_t val = ADC_Start_Conversion(ACD3);
+	LCD_Display(val);

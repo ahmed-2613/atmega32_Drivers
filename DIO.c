@@ -133,7 +133,7 @@ uint8_t DIO_Upper_Write(uint8_t Group, uint8_t Value)
 	if(get_upper(DIO_Get_Port_Direction(Group)) != 0x0F)
 		return 0xFE;	//error writing on Non-Output Port
 
-	if(get_upper(Value) == 0x00)
+	if(get_upper(Value) != 0x00)
 		return 0xFF;	//Input Error
 
 	switch(Group)
@@ -154,7 +154,7 @@ uint8_t DIO_Lower_Write(uint8_t Group, uint8_t Value)
 	if(get_lower(DIO_Get_Port_Direction(Group)) != 0x0F)
 		return 0xFE;	//error writing on Non-Output Port
 
-	if(get_upper(Value) == 0x00)
+	if(get_upper(Value) != 0x00)
 			return 0xFF;	//Input Error
 
 	switch(Group)
@@ -424,7 +424,7 @@ uint8_t DIO_Upper_Read(uint8_t Group)
 
 	return 0xFF;	//Group error
 }
-uint8_t Dio_Lower_Read(uint8_t Group)
+uint8_t DIO_Lower_Read(uint8_t Group)
 {
 	if(get_lower(DIO_Get_Port_Direction(Group)) != 0x0F)
 		return 0xFE;	//error reading from Non-Input Port
